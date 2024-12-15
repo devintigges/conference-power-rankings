@@ -21,7 +21,7 @@ def index():
             table[winner][loser]['wins'] = wins
             table[loser][winner]['losses'] = losses
 
-    return render_template('index.html', table=table, conferences=conferences)
+    return render_template('index.html', table=table, conferences=conferences, last_update = db_manager.get_last_modified_date())
 # Run the app
 if __name__ == "__main__":
     app.run(debug=True)

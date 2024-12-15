@@ -1,4 +1,6 @@
 import sqlite3
+from datetime import datetime
+import pytz
 
 class DatabaseManager:
     def __init__(self, db_path):
@@ -53,5 +55,29 @@ class DatabaseManager:
         power_conference_games = self.cursor.fetchall()
         
         return power_conference_games
+
+    def get_last_modified_date(self):
+        last_update_query = '''SELECT last_modified FROM db_info WHERE id=1'''
+
+        # Execute the query
+        self.cursor.execute(last_update_query)
+        last_update = self.cursor.fetchone()
+        
+        # Extract the date string from the tuple (e.g., ('2024-12-15 20:45:00',) -> '2024-12-15 20:45:00')
+        if last_update:
+            last_update_str = last_update[0]
+        else:
+            return None  # Handle case where no result is returned
+        
+        utc_time = datetime.strptime(last_update_str, "%Y-%m-%d %H:%M:%S")
+
+        utc = pytz.utc
+        cst = pytz.timezone('US/Central')
+        
+        utc_time = utc.localize(utc_time)
+        cst_time = utc_time.astimezone(cst)
+        readable_time = cst_time.strftime("%Y-%m-%d %I:%M %p %Z")
+        
+        return readable_time
 
         
