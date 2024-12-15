@@ -79,5 +79,11 @@ class DatabaseManager:
         readable_time = cst_time.strftime("%Y-%m-%d %I:%M %p %Z")
         
         return readable_time
+    
+    def add_game(self, winner, loser):        
+        last_update_query = '''INSERT OR REPLACE INTO games (winner, loser) VALUES (?, ?);'''
+        self.cursor.execute(last_update_query,(winner,loser))
+        
+        self.connection.commit()
 
         

@@ -1,13 +1,17 @@
 from flask import Flask, render_template
 from DatabaseManager import DatabaseManager
+from Scraper import Scraper
 
 # Initialize the Flask app
 app = Flask(__name__)
 
 @app.route('/')
 def index():
-    db_manager = DatabaseManager('teams.db')
+    
+    db_manager = DatabaseManager('teams_test.db')
     db_manager.connect()
+    
+    Scraper.get_game_data()
     
     head_to_head_data = db_manager.get_head_to_head_results()
     conferences = ['Big Ten', 'SEC', 'ACC', 'Big East', 'Big 12']
